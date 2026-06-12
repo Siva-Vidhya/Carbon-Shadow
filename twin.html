@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Twin - Alternate Timelines</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="twin.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+</head>
+<body class="twin-body">
+
+  <div class="grain-overlay" aria-hidden="true"></div>
+  
+  <!-- Dynamic ambient background driven by JS -->
+  <div class="ambient-timeline" id="ambient-bg"></div>
+
+  <!-- Top Nav -->
+  <header class="twin-header">
+    <a href="dashboard.html" class="btn btn--glass btn--sm">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Command Center
+    </a>
+    <a href="settings.html" class="btn btn--glass btn--sm" aria-label="Settings" title="Settings" style="padding: 0 12px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+    </a>
+    <div class="twin-header__title">
+      <span class="twin-header__dot"></span>
+      Simulation Active: Horizon 2030
+    </div>
+  </header>
+
+  <!-- Horizontal Scroll Container -->
+  <main class="timeline-container">
+    <div class="timeline-track">
+      
+      <!-- SVG Branching Paths (drawn behind cards) -->
+      <svg class="timeline-svg" id="timeline-svg">
+        <path class="branch branch--base" d="M 0 500 L 400 500" />
+        <path class="branch branch--a" d="M 400 500 C 500 500, 600 250, 750 250" />
+        <path class="branch branch--b" d="M 400 500 C 500 500, 600 500, 750 500" />
+        <path class="branch branch--c" d="M 400 500 C 500 500, 600 750, 750 750" />
+      </svg>
+
+      <!-- 1. BASELINE: Current You -->
+      <div class="t-card-wrapper" style="left: 50px; top: 50%; transform: translateY(-50%);">
+        <div class="t-card t-card--base">
+          <div class="t-card__glow t-card__glow--base"></div>
+          <div class="t-card__content">
+            <div class="t-card__badge">Baseline</div>
+            <h2 class="t-card__title">Current You</h2>
+            <p class="t-card__desc">Your footprint mapped from recent behavior patterns.</p>
+            
+            <div class="t-metrics">
+              <div class="t-metric">
+                <span class="t-metric__label">Carbon<i class="methodology-icon">i</i></span>
+                <span class="t-metric__val" id="base-carbon">4.2t / yr</span>
+              </div>
+              <div class="t-metric">
+                <span class="t-metric__label">Water<i class="methodology-icon">i</i></span>
+                <span class="t-metric__val">800k L</span>
+              </div>
+              <div class="t-metric">
+                <span class="t-metric__label">Health</span>
+                <span class="t-metric__val text-neutral">Average</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Scroll Indicator -->
+      <div class="scroll-indicator" style="position: absolute; left: 500px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-family: var(--font-mono); font-size: 0.85rem; display: flex; flex-direction: column; align-items: center; gap: 8px; animation: pulse-right 2s infinite;">
+        <span>Scroll to explore futures</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 17 18 12 13 7"></polyline><line x1="6" y1="12" x2="18" y2="12"></line></svg>
+      </div>
+
+      <!-- THE BRANCHES CONTAINER -->
+      <div class="branches-wrapper">
+        
+        <!-- 2. Future A: Current Habits -->
+        <div class="t-card-wrapper wrapper--a" data-theme="shadow">
+          <div class="t-card t-card--shadow" id="card-a">
+            <div class="t-card__glow t-card__glow--shadow"></div>
+            <div class="t-card__particles" id="particles-shadow"></div>
+            <div class="t-card__content">
+              <div class="t-card__badge text-rose">Path A</div>
+              <h2 class="t-card__title">The Shadow</h2>
+              <p class="t-card__desc">If current consumption habits persist unchecked.</p>
+              
+              <div class="t-metrics">
+                <div class="t-metric t-metric--bad">
+                  <span class="t-metric__label">Carbon Debt<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="12.5" data-suffix="t">+12.5t</span>
+                </div>
+                <div class="t-metric t-metric--bad">
+                  <span class="t-metric__label">Water Scarcity<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="2.4" data-suffix="M L">2.4M L</span>
+                </div>
+                <div class="t-metric t-metric--bad">
+                  <span class="t-metric__label">Cost Burden</span>
+                  <span class="t-metric__val">-$4,200</span>
+                </div>
+                <div class="t-metric">
+                  <span class="t-metric__label">Health Impact</span>
+                  <span class="t-metric__val text-rose">Elevated Risk</span>
+                </div>
+              </div>
+              <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(244,63,94,0.3);">Choose This Path</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Future B: Better Choices -->
+        <div class="t-card-wrapper wrapper--b" data-theme="shift">
+          <div class="t-card t-card--shift" id="card-b">
+            <div class="t-card__glow t-card__glow--shift"></div>
+            <div class="t-card__content">
+              <div class="t-card__badge text-teal">Path B</div>
+              <h2 class="t-card__title">The Shift</h2>
+              <p class="t-card__desc">Adopting AI recommendations 60% of the time.</p>
+              
+              <div class="t-metrics">
+                <div class="t-metric t-metric--good">
+                  <span class="t-metric__label">Carbon Avoided<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="-4.8" data-suffix="t">-4.8t</span>
+                </div>
+                <div class="t-metric t-metric--good">
+                  <span class="t-metric__label">Water Saved<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="600" data-suffix="k L">600k L</span>
+                </div>
+                <div class="t-metric t-metric--good">
+                  <span class="t-metric__label">Cost Savings</span>
+                  <span class="t-metric__val">+$1,850</span>
+                </div>
+                <div class="t-metric">
+                  <span class="t-metric__label">Health Impact</span>
+                  <span class="t-metric__val text-teal">Improved</span>
+                </div>
+              </div>
+              <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(13,148,136,0.3);">Choose This Path</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Future C: Optimized Lifestyle -->
+        <div class="t-card-wrapper wrapper--c" data-theme="light">
+          <div class="t-card t-card--light" id="card-c">
+            <div class="t-card__glow t-card__glow--light"></div>
+            <div class="t-card__particles" id="particles-light"></div>
+            <div class="t-card__content">
+              <div class="t-card__badge text-violet">Path C</div>
+              <h2 class="t-card__title">The Light</h2>
+              <p class="t-card__desc">Living perfectly aligned with Earth's sustainable boundaries.</p>
+              
+              <div class="t-metrics">
+                <div class="t-metric t-metric--excellent">
+                  <span class="t-metric__label">Carbon Neutral<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="0.0" data-suffix="t">0.0t</span>
+                </div>
+                <div class="t-metric t-metric--excellent">
+                  <span class="t-metric__label">Water Restored<i class="methodology-icon">i</i></span>
+                  <span class="t-metric__val counter" data-val="1.2" data-suffix="M L">+1.2M L</span>
+                </div>
+                <div class="t-metric t-metric--excellent">
+                  <span class="t-metric__label">Cost Savings</span>
+                  <span class="t-metric__val text-emerald">+$8,400</span>
+                </div>
+                <div class="t-metric">
+                  <span class="t-metric__label">Health Impact</span>
+                  <span class="t-metric__val text-violet">Optimal Vitality</span>
+                </div>
+              </div>
+              <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(16,185,129,0.3);">Choose This Path</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="twin.js"></script>
+</body>
+</html>

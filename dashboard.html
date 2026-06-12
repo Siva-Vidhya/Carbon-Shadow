@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carbon Shadow OS</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="echo.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+</head>
+<body class="os-body">
+
+  <div class="grain-overlay" aria-hidden="true"></div>
+  <div class="os-ambient-light"></div>
+
+  <div class="os-layout">
+    
+    <!-- LEFT: NAVIGATION (ARC/TESLA STYLE) -->
+    <aside class="os-nav">
+      <div class="os-nav__top">
+        <a href="index.html" class="os-brand" aria-label="Go home">
+          <span class="os-brand__mark">◇</span>
+        </a>
+      </div>
+      
+      <div class="os-nav__menu">
+        <a href="dashboard.html" class="os-nav__item active" title="Command Center" aria-label="Command Center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </a>
+        <a href="camera.html" class="os-nav__item" title="Carbon Camera" aria-label="Carbon Camera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        </a>
+        <a href="twin.html" class="os-nav__item" title="Digital Twin" aria-label="Digital Twin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        </a>
+      </div>
+
+      <div class="os-nav__bottom">
+        <a href="settings.html" class="os-nav__item" title="Settings" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </a>
+        <div class="os-user">
+          <img src="https://ui-avatars.com/api/?name=User&background=0D9488&color=fff" alt="User Profile" class="os-user__img" id="nav-user-avatar" />
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: INSIGHTS (HUD CORE) -->
+    <main class="os-main">
+      <header class="os-header">
+        <div>
+          <h1 class="os-header__title">Command Center</h1>
+          <p class="os-header__subtitle">Real-time footprint telemetry.</p>
+        </div>
+        <div class="os-header__status">
+          <span class="status-dot"></span> System Optimal
+        </div>
+      </header>
+
+      <div class="os-grid">
+        
+        <!-- 1. Carbon Score (HUD Gauge) -->
+        <div class="os-card os-card--score col-span-2">
+          <div class="os-card__header">
+            <span class="os-card__title">Live Carbon Score</span>
+            <span class="os-card__badge badge-good">Top 12%</span>
+          </div>
+          <div class="hud-gauge">
+            <canvas id="hud-ecosystem" class="hud-gauge__canvas"></canvas>
+            <svg viewBox="0 0 200 100" class="hud-gauge__svg">
+              <!-- Background Arc -->
+              <path d="M 20 90 A 70 70 0 0 1 180 90" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12" stroke-linecap="round"/>
+              <!-- Foreground Arc (Emerald) -->
+              <path class="hud-gauge__fill" d="M 20 90 A 70 70 0 0 1 180 90" fill="none" stroke="url(#emerald-grad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251"/>
+              <!-- Glow -->
+              <path class="hud-gauge__glow" d="M 20 90 A 70 70 0 0 1 180 90" fill="none" stroke="url(#emerald-grad)" stroke-width="24" stroke-linecap="round" stroke-dasharray="251" stroke-dashoffset="251" filter="url(#glow)"/>
+              
+              <defs>
+                <linearGradient id="emerald-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#10B981" />
+                  <stop offset="100%" stop-color="#0D9488" />
+                </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="8" result="blur" />
+                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                </filter>
+              </defs>
+            </svg>
+            <div class="hud-gauge__data">
+              <div class="hud-gauge__number" id="live-score">0</div>
+              <div class="hud-gauge__unit">kg CO₂e / day<i class="methodology-icon">i</i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Carbon Wallet -->
+        <div class="os-card">
+          <div class="os-card__header">
+            <span class="os-card__title">Carbon Wallet</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          </div>
+          <div class="wallet-balance">
+            <span class="wallet-val" id="wallet-val">340</span>
+            <span class="wallet-unit">kg remaining<i class="methodology-icon">i</i></span>
+          </div>
+          <!-- Growing Tree SVG -->
+          <div class="wallet-tree-container">
+            <svg viewBox="0 0 100 100" class="wallet-tree-svg" id="wallet-tree">
+              <!-- Trunk -->
+              <path class="tree-branch" d="M50 100 C50 80, 50 60, 50 40" />
+              <!-- Left Branches -->
+              <path class="tree-branch tree-leaf-l1" d="M50 70 C40 60, 30 50, 20 50" />
+              <path class="tree-branch tree-leaf-l2" d="M40 55 C30 45, 20 40, 10 30" />
+              <!-- Right Branches -->
+              <path class="tree-branch tree-leaf-r1" d="M50 65 C60 55, 70 50, 80 50" />
+              <path class="tree-branch tree-leaf-r2" d="M60 50 C70 40, 80 30, 90 20" />
+              <!-- Top Branch -->
+              <path class="tree-branch tree-leaf-t" d="M50 40 C45 30, 55 20, 50 10" />
+            </svg>
+          </div>
+          <p class="os-card__desc">Monthly sustainable allowance. Resets in 12 days.</p>
+        </div>
+
+        <!-- 3. Carbon Debt Tracker -->
+        <div class="os-card">
+          <div class="os-card__header">
+            <span class="os-card__title">Debt Tracker</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-rose)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="debt-stat">
+            <span class="debt-val text-gradient-rose">1.2t</span>
+            <span class="debt-unit">Legacy Debt<i class="methodology-icon">i</i></span>
+          </div>
+          <button class="os-btn os-btn--sm os-btn--outline mt-4">Offset Option Available</button>
+        </div>
+
+        <!-- 4. Weekly Trend (SVG Line Chart) -->
+        <div class="os-card col-span-2">
+          <div class="os-card__header">
+            <span class="os-card__title">Weekly Telemetry</span>
+            <div class="os-tabs">
+              <span class="os-tab active">Week</span>
+              <span class="os-tab">Month</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <!-- Simple SVG line chart, path drawn via JS to animate -->
+            <svg viewBox="0 0 400 100" preserveAspectRatio="none" class="line-chart">
+              <defs>
+                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(16, 185, 129, 0.4)" />
+                  <stop offset="100%" stop-color="rgba(16, 185, 129, 0)" />
+                </linearGradient>
+              </defs>
+              <path class="chart-area" d="" fill="url(#chartGrad)"/>
+              <path class="chart-line" d="" fill="none" stroke="var(--accent-emerald)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+              <!-- Data points inserted by JS -->
+            </svg>
+            <div class="chart-axes">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Future Projection -->
+        <div class="os-card col-span-2">
+          <div class="os-card__header">
+            <span class="os-card__title">Future Horizon (2030)<i class="methodology-icon">i</i></span>
+          </div>
+          <div class="horizon-vis">
+            <div class="horizon-row">
+              <div class="horizon-label">Current Trajectory</div>
+              <div class="horizon-bar-wrap">
+                <div class="horizon-bar horizon-bar--red" style="width: 80%;"></div>
+                <div class="horizon-val">4.5t</div>
+              </div>
+            </div>
+            <div class="horizon-row">
+              <div class="horizon-label">AI Optimized Path</div>
+              <div class="horizon-bar-wrap">
+                <div class="horizon-bar horizon-bar--emerald" style="width: 35%;"></div>
+                <div class="horizon-val">1.8t</div>
+              </div>
+            </div>
+            <div class="horizon-target-line" style="left: 40%;">
+              <span>Target 2.0t</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- RIGHT: ECHO RECOMMENDATIONS -->
+    <aside class="os-ai">
+      <div class="ai-header">
+        <div class="ai-dot pulse-emerald"></div>
+        <span class="ai-title">Echo</span>
+      </div>
+
+      <div class="ai-feed">
+        <!-- Insight 1 -->
+        <div class="ai-card">
+          <div class="ai-card__icon bg-rose-trans">✈️</div>
+          <div class="ai-card__content">
+            <div class="ai-card__time">Just now</div>
+            <p class="ai-card__text">Your upcoming flight search to Berlin detected. Switching to the <strong>Eurostar</strong> will save 120kg CO₂e.</p>
+            <div class="ai-card__actions">
+              <button class="os-btn os-btn--ghost os-btn--xs">View Route</button>
+              <button class="os-btn os-btn--xs" style="background: var(--accent-emerald); color: var(--bg-deep); border-color: var(--accent-emerald);" onclick="applyShift(this)">Apply Shift</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Insight 2 -->
+        <div class="ai-card">
+          <div class="ai-card__icon bg-teal-trans">🥩</div>
+          <div class="ai-card__content">
+            <div class="ai-card__time">2 hours ago</div>
+            <p class="ai-card__text">Grocery scan complete. Replacing beef with plant-based options this week kept you <strong>15% under budget</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Insight 3 -->
+        <div class="ai-card">
+          <div class="ai-card__icon bg-violet-trans">⚡</div>
+          <div class="ai-card__content">
+            <div class="ai-card__time">Yesterday</div>
+            <p class="ai-card__text">Home energy spike detected between 6-8 PM. Consider running heavy appliances after 10 PM.</p>
+            <div class="ai-card__actions">
+              <button class="os-btn os-btn--ghost os-btn--xs">Automate via Smart Hub</button>
+              <button class="os-btn os-btn--xs" style="background: var(--accent-emerald); color: var(--bg-deep); border-color: var(--accent-emerald);" onclick="applyShift(this)">Apply Shift</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-input">
+        <input type="text" placeholder="Ask Echo..." class="ai-input__field" />
+        <button class="ai-input__btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ONBOARDING MODAL -->
+  <div id="onboarding-modal" class="onboarding-modal">
+    <div class="onboarding-content">
+      <div class="onboarding-spinner"></div>
+      <h2 id="onboarding-text">Initializing Carbon Shadow...</h2>
+      <button id="onboarding-skip" class="os-btn os-btn--ghost os-btn--sm" style="margin-top: 24px;">Skip Onboarding</button>
+    </div>
+  </div>
+
+  <!-- ECHO COMPANION WIDGET -->
+  <div class="echo-trigger" id="echo-trigger" title="Talk to Echo">
+    <div class="echo-trigger__core"></div>
+    <div class="echo-badge" id="echo-badge" style="display:flex; align-items:center; justify-content:center; width:18px; height:18px; font-size:10px; font-weight:bold; color:#fff;">1</div>
+  </div>
+
+  <div class="echo-panel" id="echo-panel">
+    <div class="echo-header">
+      <div class="echo-header__info">
+        <div class="echo-trigger__core" style="width: 12px; height: 12px; animation: none;"></div>
+          <div class="echo-header__title">Echo</div>
+        <span class="echo-header__status">Online</span>
+      </div>
+      <button class="echo-close" id="echo-close" aria-label="Close Echo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="echo-chat" id="echo-chat">
+      <div class="echo-msg echo-msg--ai">
+          <div class="echo-bubble">Welcome to Carbon Shadow. I'm Echo. Ask me anything or request a shift scenario.</div>
+      </div>
+    </div>
+    
+    <div class="echo-input-area">
+      <div class="echo-input-box">
+        <input type="text" id="echo-input" class="echo-input__field" placeholder="Ask Echo..." autocomplete="off">
+        <button class="echo-send" id="echo-send" aria-label="Send">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+  <script src="echo.js"></script>
+</body>
+</html>

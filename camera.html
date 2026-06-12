@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Carbon Camera AR</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="camera.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+</head>
+<body class="ar-body">
+
+  <!-- Camera Feed -->
+  <video id="ar-video" class="ar-video" autoplay playsinline muted></video>
+  
+  <!-- Fallback/Overlay Gradient if camera fails or for styling -->
+  <div class="ar-vignette"></div>
+
+  <!-- HUD Layer -->
+  <div class="ar-hud">
+    <div style="display: flex; gap: 8px;">
+      <a href="dashboard.html" class="ar-btn-back" aria-label="Return to Command Center">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </a>
+      <a href="settings.html" class="ar-btn-back" aria-label="Settings" title="Settings" style="padding: 10px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+      </a>
+    </div>
+    
+    <div class="ar-status">
+      <div class="ar-status-dot"></div>
+      <span id="ar-status-text">Initializing Optical Sensors...</span>
+    </div>
+
+    <div class="ar-instructions" id="ar-instructions">
+      Tap anywhere on an object to scan its shadow.
+    </div>
+  </div>
+
+  <!-- Scanning Reticle (Dynamic) -->
+  <div id="ar-reticle" class="ar-reticle hidden">
+    <svg viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" class="reticle-ring" />
+      <circle cx="50" cy="50" r="4" class="reticle-dot" />
+      <!-- Scanning line -->
+      <line x1="10" y1="50" x2="90" y2="50" class="reticle-scan" />
+    </svg>
+  </div>
+
+  <!-- AR Card Container (Spawns at tap location) -->
+  <div id="ar-card-container" class="ar-card-container hidden">
+    <div class="spatial-card">
+      <div class="spatial-card__glow"></div>
+      
+      <div class="spatial-card__header">
+        <span class="spatial-card__icon" id="ar-icon">📦</span>
+        <div class="spatial-card__title-wrap">
+          <h2 class="spatial-card__title" id="ar-title">Object Detected</h2>
+          <div class="spatial-card__subtitle" id="ar-category">Analysis complete</div>
+        </div>
+        <button class="spatial-card__close" id="ar-close-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <div class="spatial-card__metrics">
+        <!-- Carbon Cost -->
+        <div class="spatial-metric">
+          <div class="spatial-metric__label">Carbon Cost<i class="methodology-icon">i</i></div>
+          <div class="spatial-metric__value">
+            <span id="ar-carbon">0.0</span> <span class="spatial-metric__unit">kg CO₂e</span>
+          </div>
+          <div class="spatial-bar"><div class="spatial-bar__fill" id="ar-carbon-bar" style="background: var(--accent-rose);"></div></div>
+        </div>
+
+        <!-- Water Cost -->
+        <div class="spatial-metric">
+          <div class="spatial-metric__label">Water Cost<i class="methodology-icon">i</i></div>
+          <div class="spatial-metric__value">
+            <span id="ar-water">0</span> <span class="spatial-metric__unit">Liters</span>
+          </div>
+          <div class="spatial-bar"><div class="spatial-bar__fill" id="ar-water-bar" style="background: var(--accent-teal);"></div></div>
+        </div>
+
+        <!-- Sustainability Score -->
+        <div class="spatial-metric spatial-metric--score">
+          <div class="spatial-metric__label">Sustainability Index</div>
+          <div class="spatial-score-ring">
+            <svg viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3"></circle>
+              <circle cx="18" cy="18" r="16" fill="none" stroke="var(--accent-emerald)" stroke-width="3" stroke-dasharray="100 100" stroke-dashoffset="25" id="ar-score-ring"></circle>
+            </svg>
+            <div class="spatial-score-val" id="ar-score">75</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="spatial-card__alts">
+        <div class="spatial-alts-label">✦ Lighter Alternatives</div>
+        <div class="spatial-alt-item">
+          <span class="spatial-alt-name" id="ar-alt-1">Searching...</span>
+          <span class="spatial-alt-save" id="ar-alt-1-save">-0%</span>
+        </div>
+      </div>
+
+    </div>
+    <!-- Connecting line from reticle to card -->
+    <div class="spatial-anchor-line"></div>
+  </div>
+
+  <script src="camera.js"></script>
+</body>
+</html>

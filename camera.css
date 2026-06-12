@@ -1,0 +1,245 @@
+/* =========================================
+   CARBON SHADOW - AR CAMERA STYLES
+   ========================================= */
+
+.ar-body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Edge-to-edge camera feed */
+.ar-video {
+  position: absolute;
+  top: 50%; left: 50%;
+  min-width: 100%; min-height: 100%;
+  width: auto; height: auto;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+  z-index: 0;
+}
+
+/* Fallback/Vignette */
+.ar-vignette {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.6) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* HUD Layer */
+.ar-hud {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 10;
+  pointer-events: none; /* Let clicks pass through to the screen */
+  padding: 40px;
+}
+
+.ar-btn-back {
+  position: absolute;
+  top: 40px; left: 40px;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s;
+  pointer-events: auto; /* Re-enable clicks */
+}
+.ar-btn-back:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.ar-status {
+  position: absolute;
+  top: 48px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 0.8rem;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.ar-status-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 8px var(--accent-emerald);
+}
+
+.ar-instructions {
+  position: absolute;
+  bottom: 60px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+  transition: opacity 0.5s;
+}
+
+/* Scanning Reticle */
+.ar-reticle {
+  position: absolute;
+  width: 100px; height: 100px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 20;
+}
+.ar-reticle.hidden { display: none; }
+.ar-reticle svg { width: 100%; height: 100%; }
+.reticle-ring {
+  fill: none; stroke: rgba(255,255,255,0.5); stroke-width: 2;
+  stroke-dasharray: 4 6;
+  animation: spin 4s linear infinite;
+  transform-origin: center;
+}
+.reticle-dot { fill: var(--accent-emerald); }
+.reticle-scan {
+  stroke: var(--accent-emerald); stroke-width: 2;
+  animation: scan-line 1.5s ease-in-out infinite alternate;
+}
+@keyframes spin { 100% { transform: rotate(360deg); } }
+@keyframes scan-line {
+  0% { transform: translateY(-30px); opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(30px); opacity: 0; }
+}
+
+/* Spatial AR Card (Vision Pro Style) */
+.ar-card-container {
+  position: absolute;
+  transform: translate(0, 0); /* Set via JS */
+  z-index: 30;
+  perspective: 1000px;
+  pointer-events: auto;
+}
+.ar-card-container.hidden {
+  display: none;
+}
+
+/* The Anchor Line connects the tapped point to the floating card */
+.spatial-anchor-line {
+  position: absolute;
+  top: 0; left: 0; /* JS adjusts this based on card position vs tap */
+  width: 2px; height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), transparent);
+  transform-origin: top center;
+}
+
+.spatial-card {
+  position: relative;
+  width: 320px;
+  background: rgba(255, 255, 255, 0.05); /* Extremely sheer */
+  backdrop-filter: blur(40px) saturate(150%);
+  -webkit-backdrop-filter: blur(40px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 24px;
+  color: #fff;
+  box-shadow: 
+    0 30px 60px rgba(0,0,0,0.4),
+    inset 0 0 0 1px rgba(255,255,255,0.1),
+    inset 0 20px 40px rgba(255,255,255,0.05);
+  animation: float-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+  /* Slight parallax tilt applied via JS */
+  transform-style: preserve-3d;
+}
+
+@keyframes float-in {
+  from { opacity: 0; transform: scale(0.8) translateZ(-50px) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateZ(0) translateY(0); }
+}
+
+.spatial-card__glow {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at top left, rgba(255,255,255,0.15), transparent 60%);
+  border-radius: 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.spatial-card__header {
+  position: relative; z-index: 1;
+  display: flex; gap: 16px; align-items: flex-start;
+  margin-bottom: 24px;
+}
+.spatial-card__icon {
+  font-size: 2rem;
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.spatial-card__title-wrap { flex: 1; }
+.spatial-card__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem; font-weight: 500; margin-bottom: 2px;
+}
+.spatial-card__subtitle {
+  font-family: var(--font-mono); font-size: 0.75rem; color: rgba(255,255,255,0.6);
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.spatial-card__close {
+  background: rgba(0,0,0,0.2); border: none; border-radius: 50%;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  color: #fff; cursor: pointer; transition: background 0.2s;
+}
+.spatial-card__close:hover { background: rgba(255,255,255,0.2); }
+
+.spatial-card__metrics {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; gap: 16px;
+  margin-bottom: 24px;
+}
+.spatial-metric {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.spatial-metric__label { font-size: 0.85rem; color: rgba(255,255,255,0.7); }
+.spatial-metric__value { font-family: var(--font-mono); font-size: 1.1rem; }
+.spatial-metric__unit { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+.spatial-bar { height: 4px; background: rgba(0,0,0,0.3); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.spatial-bar__fill { height: 100%; border-radius: 2px; width: 0; transition: width 1s var(--ease-spring); }
+
+/* Score Ring */
+.spatial-metric--score {
+  flex-direction: row; justify-content: space-between; align-items: center;
+  background: rgba(0,0,0,0.2); padding: 12px; border-radius: 12px;
+}
+.spatial-score-ring { position: relative; width: 40px; height: 40px; }
+.spatial-score-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+#ar-score-ring { transition: stroke-dashoffset 1s var(--ease-spring); }
+.spatial-score-val {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600;
+}
+
+.spatial-card__alts {
+  position: relative; z-index: 1;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 16px;
+}
+.spatial-alts-label { font-size: 0.8rem; color: var(--accent-emerald); margin-bottom: 8px; }
+.spatial-alt-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px;
+  font-size: 0.85rem;
+}
+.spatial-alt-save { color: var(--accent-emerald); font-family: var(--font-mono); }

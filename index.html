@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carbon Shadow — The Future Leaves Footprints Before You Do</title>
+  <meta name="description" content="AI reveals the environmental impact of your decisions before they happen. See your carbon shadow in real-time." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+</head>
+<body>
+
+  <!-- Global Grain Overlay -->
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__logo">
+      <div class="nav__logo-mark">◇</div>
+      <span>Carbon Shadow</span>
+    </div>
+    <div class="nav__links">
+      <a href="#how-it-works" class="nav__link">How It Works</a>
+      <a href="#digital-twin" class="nav__link">Digital Twin</a>
+      <a href="#camera" class="nav__link">Carbon Camera</a>
+      <a href="#futures" class="nav__link">Futures</a>
+      <a href="settings.html" class="nav__link">Settings</a>
+    </div>
+    <div class="nav__right">
+      <a href="dashboard.html" class="btn btn--ghost btn--sm" style="text-decoration: none;">Sign In</a>
+      <a href="dashboard.html" class="btn btn--primary btn--sm" style="text-decoration: none;">Launch App</a>
+    </div>
+    <div class="nav__progress"><div class="nav__progress-fill" id="scroll-progress"></div></div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" id="hero">
+    <div class="hero__bg">
+      <canvas id="forest-canvas" aria-hidden="true"></canvas>
+      <div class="hero__fog hero__fog--1"></div>
+      <div class="hero__fog hero__fog--2"></div>
+      <div class="hero__vignette"></div>
+    </div>
+
+    <!-- Animated Footprint -->
+    <div class="hero__footprint" id="hero-footprint" aria-hidden="true">
+      <svg viewBox="0 0 300 520" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fp-grad" x1="150" y1="0" x2="150" y2="520" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#34D399" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#0D9488" stop-opacity="0.1"/>
+          </linearGradient>
+          <filter id="fp-glow">
+            <feGaussianBlur stdDeviation="6" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Foot shape (simplified anatomical footprint) -->
+        <path class="footprint-path" filter="url(#fp-glow)"
+          d="M150,510 C90,510 35,460 30,400 C25,340 50,300 55,260 C60,220 40,190 45,150
+             C50,110 70,80 90,55 C110,30 130,15 150,10 C170,15 190,30 210,55
+             C230,80 250,110 255,150 C260,190 240,220 245,260 C250,300 275,340 270,400
+             C265,460 210,510 150,510Z"
+          stroke="url(#fp-grad)" stroke-width="1.5" fill="none"
+        />
+        <!-- Toe dots -->
+        <circle class="toe toe-1" cx="100" cy="30" r="18" stroke="url(#fp-grad)" stroke-width="1.2" fill="none"/>
+        <circle class="toe toe-2" cx="135" cy="12" r="16" stroke="url(#fp-grad)" stroke-width="1.2" fill="none"/>
+        <circle class="toe toe-3" cx="168" cy="10" r="15" stroke="url(#fp-grad)" stroke-width="1.2" fill="none"/>
+        <circle class="toe toe-4" cx="198" cy="18" r="13" stroke="url(#fp-grad)" stroke-width="1.2" fill="none"/>
+        <circle class="toe toe-5" cx="222" cy="38" r="11" stroke="url(#fp-grad)" stroke-width="1.2" fill="none"/>
+        <!-- Interior tree particles rendered via canvas -->
+      </svg>
+    </div>
+
+    <div class="hero__content">
+      <div class="hero__overline reveal-hero" data-delay="0">
+        <span class="hero__overline-dot"></span>
+        Environmental Intelligence Platform
+      </div>
+
+      <h1 class="hero__title reveal-hero" data-delay="1">
+        The Future Leaves<br/>
+        Footprints <span class="hero__title-em">Before</span><br/>
+        You Do.
+      </h1>
+
+      <p class="hero__sub reveal-hero" data-delay="2">
+        AI reveals the environmental impact of your decisions<br class="hide-mobile"/>
+        before they happen. See the shadow every choice casts.
+      </p>
+
+      <div class="hero__actions reveal-hero" data-delay="3">
+        <a href="dashboard.html" class="btn btn--glow btn--lg" style="text-decoration: none;">
+          <span class="btn__shimmer"></span>
+          Launch Live Demo
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="#how-it-works" class="btn btn--glass btn--lg" id="btn-hero-watch" style="text-decoration: none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Watch Demo
+        </a>
+      </div>
+
+      <div class="hero__scroll-cue reveal-hero" data-delay="4">
+        <div class="hero__scroll-line"></div>
+        <span>Scroll to explore</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="section-works" id="how-it-works">
+    <div class="works__header">
+      <div class="pill pill--emerald reveal">◎ How It Works</div>
+      <h2 class="works__title reveal">
+        Three moments.<br/>
+        <span class="text-gradient">One shift in perspective.</span>
+      </h2>
+    </div>
+
+    <div class="works__steps">
+      <div class="work-step reveal" data-step="1">
+        <div class="work-step__line">
+          <div class="work-step__dot"><span>01</span></div>
+          <div class="work-step__connector"></div>
+        </div>
+        <div class="work-step__content">
+          <div class="work-step__visual">
+            <div class="work-step__phone">
+              <div class="phone-mock">
+                <div class="phone-mock__bar">
+                  <span class="phone-mock__time">9:41</span>
+                  <span class="phone-mock__icons">● ● ●</span>
+                </div>
+                <div class="phone-mock__screen phone-mock__screen--ask">
+                  <div class="mock-input">
+                    <span class="mock-input__icon">✦</span>
+                    <span class="mock-input__text typing-anim" id="typing-1">flight to Tokyo...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="work-step__info">
+            <h3 class="work-step__title">Ask Anything</h3>
+            <p class="work-step__desc">Type a product, trip, meal, or any decision in plain language. No forms, no data entry — just a question. The AI understands context, quantities, and nuance.</p>
+            <div class="work-step__tags">
+              <span class="tag">Natural Language</span>
+              <span class="tag">Zero Friction</span>
+              <span class="tag">< 2 seconds</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-step reveal" data-step="2">
+        <div class="work-step__line">
+          <div class="work-step__dot"><span>02</span></div>
+          <div class="work-step__connector"></div>
+        </div>
+        <div class="work-step__content work-step__content--reverse">
+          <div class="work-step__info">
+            <h3 class="work-step__title">See the Shadow</h3>
+            <p class="work-step__desc">Your choice's environmental impact is visualized as a single, resonant number — with projections across time. One day, one year, one lifetime. If everyone did this — what then?</p>
+            <div class="work-step__tags">
+              <span class="tag">CO₂ · Water · Energy · Land</span>
+              <span class="tag">Time Projection</span>
+            </div>
+          </div>
+          <div class="work-step__visual">
+            <div class="work-step__phone">
+              <div class="phone-mock">
+                <div class="phone-mock__bar">
+                  <span class="phone-mock__time">9:41</span>
+                  <span class="phone-mock__icons">● ● ●</span>
+                </div>
+                <div class="phone-mock__screen phone-mock__screen--result">
+                  <div class="mock-result">
+                    <div class="mock-result__label">Carbon Shadow</div>
+                    <div class="mock-result__number" id="mock-number">1,240</div>
+                    <div class="mock-result__unit">kg CO₂e<i class="methodology-icon">i</i></div>
+                    <div class="mock-result__bar">
+                      <div class="mock-result__bar-fill"></div>
+                    </div>
+                    <div class="mock-result__time">≈ 3 years of your daily commute</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="work-step reveal" data-step="3">
+        <div class="work-step__line">
+          <div class="work-step__dot"><span>03</span></div>
+        </div>
+        <div class="work-step__content">
+          <div class="work-step__visual">
+            <div class="work-step__phone">
+              <div class="phone-mock">
+                <div class="phone-mock__bar">
+                  <span class="phone-mock__time">9:41</span>
+                  <span class="phone-mock__icons">● ● ●</span>
+                </div>
+                <div class="phone-mock__screen phone-mock__screen--alt">
+                  <div class="mock-alt">
+                    <div class="mock-alt__title">✦ Lighter Paths</div>
+                    <div class="mock-alt__item mock-alt__item--best">
+                      <span class="mock-alt__icon">🚄</span>
+                      <div>
+                        <div class="mock-alt__name">Train via Seoul</div>
+                        <div class="mock-alt__save">−92% shadow</div>
+                      </div>
+                      <span class="mock-alt__val">98 kg</span>
+                    </div>
+                    <div class="mock-alt__item">
+                      <span class="mock-alt__icon">💻</span>
+                      <div>
+                        <div class="mock-alt__name">Remote meeting</div>
+                        <div class="mock-alt__save">−99.9% shadow</div>
+                      </div>
+                      <span class="mock-alt__val">0.05 kg</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="work-step__info">
+            <h3 class="work-step__title">Choose Lighter</h3>
+            <p class="work-step__desc">Every shadow comes with brighter alternatives. The AI ranks lower-impact options, showing exactly what you save — not guilt, just clarity and agency.</p>
+            <div class="work-step__tags">
+              <span class="tag">AI-Ranked Alternatives</span>
+              <span class="tag">Agency, Not Anxiety</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DIGITAL TWIN ===== -->
+  <section class="section-twin" id="digital-twin">
+    <div class="twin__inner">
+      <div class="pill pill--violet reveal">✦ Digital Twin</div>
+      <h2 class="twin__title reveal">
+        Your environmental<br/>
+        <span class="text-gradient-violet">digital twin.</span>
+      </h2>
+      <p class="twin__subtitle reveal">
+        A living, breathing model of your environmental footprint that evolves with every decision you make.
+      </p>
+
+      <div class="twin__grid reveal">
+        <div class="twin__card twin__card--main">
+          <div class="twin__card-glow"></div>
+          <div class="twin__orbit" id="twin-orbit">
+            <!-- Central score -->
+            <div class="twin__center">
+              <div class="twin__score" id="twin-score">48.2</div>
+              <div class="twin__score-unit">kg CO₂e<br/><span>this month</span></div>
+            </div>
+            <!-- Orbiting metric nodes -->
+            <div class="twin__node twin__node--1" data-label="Carbon">
+              <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" stroke-dasharray="72 28" stroke-dashoffset="25"/></svg>
+              <span>🔥</span>
+            </div>
+            <div class="twin__node twin__node--2" data-label="Water">
+              <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" stroke-dasharray="58 42" stroke-dashoffset="25"/></svg>
+              <span>💧</span>
+            </div>
+            <div class="twin__node twin__node--3" data-label="Energy">
+              <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" stroke-dasharray="45 55" stroke-dashoffset="25"/></svg>
+              <span>⚡</span>
+            </div>
+            <div class="twin__node twin__node--4" data-label="Land">
+              <svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" stroke-dasharray="35 65" stroke-dashoffset="25"/></svg>
+              <span>🌍</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="twin__side">
+          <div class="twin__metric glass-card">
+            <div class="twin__metric-header">
+              <span class="twin__metric-icon" style="color: var(--accent-emerald)">↓ 12%</span>
+              <span class="twin__metric-label">vs. last month</span>
+            </div>
+            <div class="twin__metric-chart" id="sparkline-1"></div>
+            <div class="twin__metric-footer">Your shadow is shrinking</div>
+          </div>
+
+          <div class="twin__metric glass-card">
+            <div class="twin__metric-header">
+              <span class="twin__metric-icon" style="color: var(--accent-teal)">🏆 Top 15%</span>
+              <span class="twin__metric-label">in your city</span>
+            </div>
+            <div class="twin__metric-detail">
+              <div class="twin__bar-row">
+                <span>You</span>
+                <div class="twin__bar"><div class="twin__bar-fill" style="width: 35%; background: var(--accent-teal);"></div></div>
+              </div>
+              <div class="twin__bar-row">
+                <span>Avg</span>
+                <div class="twin__bar"><div class="twin__bar-fill" style="width: 68%; background: var(--text-tertiary);"></div></div>
+              </div>
+            </div>
+            <div class="twin__metric-footer">Lower is better</div>
+          </div>
+
+          <div class="twin__metric glass-card">
+            <div class="twin__metric-header">
+              <span class="twin__metric-icon" style="color: var(--accent-violet)">✦ 23</span>
+              <span class="twin__metric-label">scans this week</span>
+            </div>
+            <div class="twin__streak">
+              <span class="streak-dot active"></span>
+              <span class="streak-dot active"></span>
+              <span class="streak-dot active"></span>
+              <span class="streak-dot active"></span>
+              <span class="streak-dot active"></span>
+              <span class="streak-dot"></span>
+              <span class="streak-dot"></span>
+            </div>
+            <div class="twin__metric-footer">5-day streak 🔥</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CARBON CAMERA ===== -->
+  <section class="section-camera" id="camera">
+    <div class="camera__inner">
+      <div class="pill pill--emerald reveal">⚡ Carbon Camera</div>
+      <h2 class="camera__title reveal">
+        Point. Scan.<br/>
+        <span class="text-gradient">Know the truth.</span>
+      </h2>
+      <p class="camera__subtitle reveal">
+        Type any product or decision below. Watch the AI reveal its environmental shadow in real-time.
+      </p>
+
+      <!-- Interactive Demo -->
+      <div class="camera__demo reveal">
+        <div class="camera__screen glass-card-heavy">
+          <div class="camera__screen-header">
+            <div class="camera__screen-dot"></div>
+            <span class="camera__screen-label">Echo — Live Demo</span>
+          </div>
+
+          <div class="camera__input-area">
+            <div class="camera__input-wrap">
+              <span class="camera__input-icon">✦</span>
+              <input type="text" class="camera__input" id="camera-input"
+                placeholder="Try: beef burger, new iPhone, flight to Paris..."
+                autocomplete="off" />
+              <button class="camera__scan-btn" id="camera-scan-btn">
+                <span class="camera__scan-btn-text">Scan</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              </button>
+            </div>
+            <div class="camera__chips" id="camera-chips">
+              <button class="chip" data-q="Beef burger">🍔 Beef burger</button>
+              <button class="chip" data-q="New iPhone">📱 New iPhone</button>
+              <button class="chip" data-q="Flight to Paris">✈️ Flight to Paris</button>
+              <button class="chip" data-q="Pair of jeans">👖 Pair of jeans</button>
+              <button class="chip" data-q="1hr Netflix">📺 1hr Netflix</button>
+              <button class="chip" data-q="Avocado from Peru">🥑 Avocado from Peru</button>
+            </div>
+          </div>
+
+          <!-- Result (hidden initially) -->
+          <div class="camera__result" id="camera-result">
+            <div class="camera__result-top">
+              <div class="camera__result-icon" id="cam-res-icon">🍔</div>
+              <div class="camera__result-query" id="cam-res-query">Beef burger</div>
+            </div>
+
+            <div class="camera__result-number-wrap">
+              <div class="camera__result-glow" id="cam-res-glow"></div>
+              <div class="camera__result-number" id="cam-res-number">0.00</div>
+              <div class="camera__result-unit">kg CO₂e<i class="methodology-icon">i</i></div>
+            </div>
+
+            <div class="camera__result-context" id="cam-res-context">
+              That's equivalent to driving <strong>26 km</strong> in a car.
+            </div>
+
+            <div class="camera__result-bars" id="cam-res-bars">
+              <!-- Filled by JS -->
+            </div>
+
+            <div class="camera__result-alts" id="cam-res-alts">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FUTURE SCENARIOS ===== -->
+  <section class="section-futures" id="futures">
+    <div class="futures__inner">
+      <div class="pill pill--rose reveal">◆ Future Scenarios</div>
+      <h2 class="futures__title reveal">
+        Two futures.<br/>
+        <span class="text-gradient-rose">One choice apart.</span>
+      </h2>
+      <p class="futures__subtitle reveal">
+        Every decision branches into two timelines. Carbon Shadow lets you see them both.
+      </p>
+
+      <div class="futures__compare reveal">
+        <div class="futures__card futures__card--shadow">
+          <div class="futures__card-badge futures__card-badge--shadow">If you continue</div>
+          <div class="futures__card-icon">🌫️</div>
+          <div class="futures__card-number">4.2<span>tonnes</span></div>
+          <div class="futures__card-label">CO₂e per year<i class="methodology-icon">i</i></div>
+          <ul class="futures__card-list">
+            <li>× 62 trees needed to offset</li>
+            <li>× 2.1 global fair share</li>
+            <li>≈ Average for developed nations</li>
+          </ul>
+          <div class="futures__card-year">
+            <span>Your 2030</span>
+            <div class="futures__card-bar">
+              <div class="futures__card-bar-fill futures__card-bar-fill--shadow" style="width: 78%"></div>
+            </div>
+          </div>
+          <button class="btn btn--glass btn--sm mt-4" style="width: 100%; border-color: rgba(255,255,255,0.1);">Continue Current Path</button>
+        </div>
+
+        <div class="futures__divider">
+          <div class="futures__divider-line"></div>
+          <div class="futures__divider-or">OR</div>
+          <div class="futures__divider-line"></div>
+        </div>
+
+        <div class="futures__card futures__card--light">
+          <div class="futures__card-badge futures__card-badge--light">If you shift</div>
+          <div class="futures__card-icon">🌿</div>
+          <div class="futures__card-number futures__card-number--light">1.8<span>tonnes</span></div>
+          <div class="futures__card-label">CO₂e per year<i class="methodology-icon">i</i></div>
+          <ul class="futures__card-list">
+            <li>× 27 trees needed to offset</li>
+            <li>× 0.9 global fair share</li>
+            <li>≈ Climate-safe living</li>
+          </ul>
+          <div class="futures__card-year">
+            <span>Your 2030</span>
+            <div class="futures__card-bar">
+              <div class="futures__card-bar-fill futures__card-bar-fill--light" style="width: 33%"></div>
+            </div>
+          </div>
+          <button class="btn btn--glow btn--sm mt-4" style="width: 100%;">Choose This Path</button>
+        </div>
+      </div>
+
+      <p class="futures__footnote reveal">
+        The difference? <strong>12 small decisions per month</strong> — chosen with Carbon Shadow.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== COMMUNITY IMPACT ===== -->
+  <section class="section-community" id="community">
+    <div class="community__inner">
+      <div class="pill pill--teal reveal">◎ Community</div>
+      <h2 class="community__title reveal">
+        We don't measure impact alone.<br/>
+        <span class="text-gradient-teal">We multiply it.</span>
+      </h2>
+
+      <div class="community__stats reveal">
+        <div class="community__stat">
+          <div class="community__stat-number" data-target="142847">0</div>
+          <div class="community__stat-label">Shadows scanned</div>
+        </div>
+        <div class="community__stat-divider"></div>
+        <div class="community__stat">
+          <div class="community__stat-number" data-target="38200">0</div>
+          <div class="community__stat-label">Active users</div>
+        </div>
+        <div class="community__stat-divider"></div>
+        <div class="community__stat">
+          <div class="community__stat-number" data-target="1247">0</div>
+          <div class="community__stat-label">Tonnes CO₂ made visible<i class="methodology-icon">i</i></div>
+        </div>
+        <div class="community__stat-divider"></div>
+        <div class="community__stat">
+          <div class="community__stat-number" data-target="96" data-suffix="%">0</div>
+          <div class="community__stat-label">AI accuracy rate</div>
+        </div>
+      </div>
+
+      <div class="community__testimonials">
+        <div class="community__track" id="testimonial-track">
+          <div class="testimonial glass-card">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"I had no idea my morning coffee routine had such a huge shadow. Switching to a local roaster cut it by 60%. This app changed how I see everything."</p>
+            <div class="testimonial__author">
+              <div class="testimonial__avatar" style="background: linear-gradient(135deg, #34D399, #2DD4BF)">MK</div>
+              <div><div class="testimonial__name">Maya K.</div><div class="testimonial__role">Graduate Student, MIT</div></div>
+            </div>
+          </div>
+          <div class="testimonial glass-card">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"Our family uses it before grocery shopping now. The kids love comparing shadows — it's turned into a game that actually matters."</p>
+            <div class="testimonial__author">
+              <div class="testimonial__avatar" style="background: linear-gradient(135deg, #A78BFA, #7C3AED)">JR</div>
+              <div><div class="testimonial__name">James R.</div><div class="testimonial__role">Parent of 3, London</div></div>
+            </div>
+          </div>
+          <div class="testimonial glass-card">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"Finally an app that doesn't lecture me. It just shows the data beautifully and lets me decide. The design alone makes me trust it."</p>
+            <div class="testimonial__author">
+              <div class="testimonial__avatar" style="background: linear-gradient(135deg, #2DD4BF, #0D9488)">SL</div>
+              <div><div class="testimonial__name">Sarah L.</div><div class="testimonial__role">Product Designer, Tokyo</div></div>
+            </div>
+          </div>
+          <div class="testimonial glass-card">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"Scanned my entire weekly shop. Saved 3kg CO₂ just by switching two items. The alternatives feature is genuinely brilliant."</p>
+            <div class="testimonial__author">
+              <div class="testimonial__avatar" style="background: linear-gradient(135deg, #F97316, #FB7185)">DP</div>
+              <div><div class="testimonial__name">David P.</div><div class="testimonial__role">Climate Researcher, Berlin</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="section-cta" id="cta">
+    <div class="cta__bg">
+      <div class="cta__orb cta__orb--1"></div>
+      <div class="cta__orb cta__orb--2"></div>
+      <div class="cta__orb cta__orb--3"></div>
+    </div>
+    <div class="cta__inner">
+      <h2 class="cta__title reveal">
+        Every decision<br/>casts a shadow.
+      </h2>
+      <p class="cta__subtitle reveal">
+        Start seeing yours today. Free forever for individuals.<br/>No credit card. No commitment. Just clarity.
+      </p>
+      <div class="cta__actions reveal">
+        <a href="dashboard.html" class="btn btn--glow btn--xl" id="btn-cta-start" style="text-decoration: none;">
+          <span class="btn__shimmer"></span>
+          Begin Your First Scan
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+      <div class="cta__trust reveal">
+        <span>🔒 Privacy-first</span>
+        <span>·</span>
+        <span>📊 Peer-reviewed data</span>
+        <span>·</span>
+        <span>🌍 Open methodology</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <div class="footer__brand">
+        <div class="footer__logo">
+          <div class="footer__logo-mark">◇</div>
+          Carbon Shadow
+        </div>
+        <p class="footer__tagline">See your future before you create it.</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Product</div>
+        <div class="footer__links">
+          <a href="#camera" class="footer__link">Shadow Scan</a>
+          <a href="#digital-twin" class="footer__link">Digital Twin</a>
+          <a href="#camera" class="footer__link">Carbon Camera</a>
+          <a href="#futures" class="footer__link">Future Scenarios</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-title">Resources</div>
+        <div class="footer__links">
+          <a href="#how-it-works" class="footer__link">Methodology</a>
+          <a href="#community" class="footer__link">Community</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer__col-title">Company</div>
+        <div class="footer__links">
+          <a href="mailto:contact@carbonshadow.com" class="footer__link">Contact</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 Carbon Shadow. All rights reserved.</span>
+      <div class="footer__socials">
+        <a href="https://twitter.com" target="_blank" class="footer__social" aria-label="X / Twitter">𝕏</a>
+        <a href="https://github.com" target="_blank" class="footer__social" aria-label="GitHub">⌂</a>
+        <a href="https://linkedin.com" target="_blank" class="footer__social" aria-label="LinkedIn">in</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

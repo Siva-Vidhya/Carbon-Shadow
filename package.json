@@ -1,0 +1,8 @@
+{
+  "name": "carbon-shadow",
+  "version": "1.0.0",
+  "description": "See your future before you create it.",
+  "scripts": {
+    "dev": "npx -y live-server --port=3000 --no-browser"
+  }
+}
