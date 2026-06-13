@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "See your future before you create it.",
   "scripts": {
-    "dev": "npx -y live-server --port=3000 --no-browser"
+    "dev": "npx -y live-server --port=3000 --no-browser",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.8"
   }
 }
