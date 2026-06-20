@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="dashboard.css" />
   <link rel="stylesheet" href="echo.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://ui-avatars.com; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Permissions-Policy" content="camera=()">
+  <script src="security-utils.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
 </head>
 <body class="os-body">
 
@@ -25,7 +30,7 @@
       </div>
       
       <div class="os-nav__menu">
-        <a href="dashboard.html" class="os-nav__item active" title="Command Center" aria-label="Command Center">
+        <a href="dashboard.html" class="os-nav__item active" title="Command Center" aria-label="Command Center" aria-current="page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
         </a>
         <a href="camera.html" class="os-nav__item" title="Carbon Camera" aria-label="Carbon Camera">
@@ -88,7 +93,7 @@
               </defs>
             </svg>
             <div class="hud-gauge__data">
-              <div class="hud-gauge__number" id="live-score">0</div>
+              <div class="hud-gauge__number" id="live-score" role="alert" aria-live="polite">0</div>
               <div class="hud-gauge__unit">kg CO₂e / day<i class="methodology-icon">i</i></div>
             </div>
           </div>
@@ -101,7 +106,7 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
           </div>
           <div class="wallet-balance">
-            <span class="wallet-val" id="wallet-val">340</span>
+            <span class="wallet-val" id="wallet-val" role="alert" aria-live="polite">340</span>
             <span class="wallet-unit">kg remaining<i class="methodology-icon">i</i></span>
           </div>
           <!-- Growing Tree SVG -->
@@ -120,6 +125,14 @@
             </svg>
           </div>
           <p class="os-card__desc">Monthly sustainable allowance. Resets in 12 days.</p>
+        </div>
+
+        <!-- 2.5 Badges Section -->
+        <div class="os-card">
+          <div class="os-card__header">
+            <span class="os-card__title">Milestone Badges</span>
+          </div>
+          <div id="badges-container" class="badges-grid"></div>
         </div>
 
         <!-- 3. Carbon Debt Tracker -->
@@ -238,7 +251,7 @@
 
       <div class="ai-input">
         <input type="text" placeholder="Ask Echo..." class="ai-input__field" />
-        <button class="ai-input__btn">
+        <button class="ai-input__btn" aria-label="Send Echo message">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
         </button>
       </div>
@@ -256,7 +269,7 @@
   </div>
 
   <!-- ECHO COMPANION WIDGET -->
-  <div class="echo-trigger" id="echo-trigger" title="Talk to Echo">
+  <div class="echo-trigger" id="echo-trigger" title="Talk to Echo" role="button" aria-expanded="false" aria-label="Open Echo AI Assistant">
     <div class="echo-trigger__core"></div>
     <div class="echo-badge" id="echo-badge" style="display:flex; align-items:center; justify-content:center; width:18px; height:18px; font-size:10px; font-weight:bold; color:#fff;">1</div>
   </div>
@@ -273,7 +286,7 @@
       </button>
     </div>
     
-    <div class="echo-chat" id="echo-chat">
+    <div class="echo-chat" id="echo-chat" role="alert" aria-live="polite">
       <div class="echo-msg echo-msg--ai">
           <div class="echo-bubble">Welcome to Carbon Shadow. I'm Echo. Ask me anything or request a shift scenario.</div>
       </div>
@@ -291,5 +304,6 @@
 
   <script src="dashboard.js"></script>
   <script src="echo.js"></script>
+  <script src="badges.js"></script>
 </body>
 </html>

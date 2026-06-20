@@ -10,9 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function applySettingsToTwin() {
-  const settingsStr = localStorage.getItem('carbon_settings');
-  if (!settingsStr) return;
-  const settings = JSON.parse(settingsStr);
+  const settings = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_settings') : null;
+  if (!settings) return;
 
   const avatar = document.getElementById('nav-user-avatar');
   if (avatar) {
@@ -29,17 +28,29 @@ function applySettingsToTwin() {
 
   const baseCarbonEl = document.getElementById('base-carbon');
   if (baseCarbonEl) baseCarbonEl.textContent = baseScore.toFixed(1) + 't / yr';
+  
+  if (typeof renderContextTooltip === 'function') {
+      renderContextTooltip('ctx-base', baseScore);
+  }
 
   const cardA = document.getElementById('card-a');
   if (cardA) {
+    const extraA = baseScore * 1.8;
     const c = cardA.querySelector('.counter[data-suffix="t"]');
-    if (c) c.setAttribute('data-val', (baseScore * 1.8).toFixed(1));
+    if (c) c.setAttribute('data-val', extraA.toFixed(1));
+    if (typeof renderContextTooltip === 'function') renderContextTooltip('ctx-a', baseScore + extraA);
   }
 
   const cardB = document.getElementById('card-b');
   if (cardB) {
+    const savedB = baseScore * 0.4;
     const c = cardB.querySelector('.counter[data-suffix="t"]');
-    if (c) c.setAttribute('data-val', (-baseScore * 0.4).toFixed(1));
+    if (c) c.setAttribute('data-val', (-savedB).toFixed(1));
+    if (typeof renderContextTooltip === 'function') renderContextTooltip('ctx-b', baseScore - savedB);
+  }
+
+  if (typeof renderContextTooltip === 'function') {
+      renderContextTooltip('ctx-c', 0.0);
   }
 }
 

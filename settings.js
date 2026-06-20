@@ -4,6 +4,11 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initSettings();
+  
+  const downloadBtn = document.getElementById('download-report');
+  if (downloadBtn && typeof generateCSVReport === 'function') {
+    downloadBtn.addEventListener('click', generateCSVReport);
+  }
 });
 
 const DEFAULT_SETTINGS = {
@@ -18,8 +23,9 @@ const DEFAULT_SETTINGS = {
 
 function initSettings() {
   // Load existing or set defaults
-  const stored = localStorage.getItem('carbon_settings');
-  const settings = stored ? JSON.parse(stored) : DEFAULT_SETTINGS;
+  const settings = window.SecurityUtils 
+    ? (window.SecurityUtils.safeLocalStorageGet('carbon_settings') || DEFAULT_SETTINGS)
+    : (localStorage.getItem('carbon_settings') ? JSON.parse(localStorage.getItem('carbon_settings')) : DEFAULT_SETTINGS);
 
   // DOM Elements
   const inputs = {
@@ -33,13 +39,13 @@ function initSettings() {
   };
 
   // Populate form
-  if (inputs.profileName) inputs.profileName.value = settings.profileName;
-  if (inputs.profileColor) inputs.profileColor.value = settings.profileColor;
-  if (inputs.diet) inputs.diet.value = settings.diet;
-  if (inputs.commute) inputs.commute.value = settings.commute;
-  if (inputs.flights) inputs.flights.value = settings.flights;
-  if (inputs.echoEnabled) inputs.echoEnabled.checked = settings.echoEnabled;
-  if (inputs.echoStrictness) inputs.echoStrictness.value = settings.echoStrictness;
+  if (inputs.profileName) inputs.profileName.value = settings.profileName || DEFAULT_SETTINGS.profileName;
+  if (inputs.profileColor) inputs.profileColor.value = settings.profileColor || DEFAULT_SETTINGS.profileColor;
+  if (inputs.diet) inputs.diet.value = settings.diet || DEFAULT_SETTINGS.diet;
+  if (inputs.commute) inputs.commute.value = settings.commute || DEFAULT_SETTINGS.commute;
+  if (inputs.flights) inputs.flights.value = settings.flights || DEFAULT_SETTINGS.flights;
+  if (inputs.echoEnabled) inputs.echoEnabled.checked = settings.echoEnabled !== undefined ? settings.echoEnabled : DEFAULT_SETTINGS.echoEnabled;
+  if (inputs.echoStrictness) inputs.echoStrictness.value = settings.echoStrictness || DEFAULT_SETTINGS.echoStrictness;
 
   updateAvatar();
 
@@ -74,19 +80,26 @@ function saveSettings(inputs) {
     echoStrictness: inputs.echoStrictness.value
   };
 
-  localStorage.setItem('carbon_settings', JSON.stringify(newSettings));
+  if (window.SecurityUtils) {
+    window.SecurityUtils.safeLocalStorageSet('carbon_settings', newSettings);
+  } else {
+    localStorage.setItem('carbon_settings', JSON.stringify(newSettings));
+  }
   
   showSaveStatus();
 }
 
 function updateAvatar() {
-  const stored = localStorage.getItem('carbon_settings');
-  if (!stored) return;
-  const settings = JSON.parse(stored);
-  const avatar = document.getElementById('nav-user-avatar');
-  if (avatar) {
-    const nameStr = encodeURIComponent(settings.profileName || 'User');
-    avatar.src = `https://ui-avatars.com/api/?name=${nameStr}&background=${settings.profileColor}&color=fff`;
+  const settings = window.SecurityUtils 
+    ? window.SecurityUtils.safeLocalStorageGet('carbon_settings') 
+    : (localStorage.getItem('carbon_settings') ? JSON.parse(localStorage.getItem('carbon_settings')) : null);
+    
+  if (settings) {
+    const avatar = document.getElementById('nav-user-avatar');
+    if (avatar) {
+      const nameStr = encodeURIComponent(settings.profileName || 'User');
+      avatar.src = `https://ui-avatars.com/api/?name=${nameStr}&background=${settings.profileColor}&color=fff`;
+    }
   }
 }
 

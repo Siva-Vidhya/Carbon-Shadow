@@ -182,191 +182,180 @@ function initTypingAnimation() {
 /* =========================================
    CAMERA DEMO (INTERACTIVE)
    ========================================= */
-function initCameraDemo() {
-  const input = document.getElementById('camera-input');
-  const btn = document.getElementById('camera-scan-btn');
-  const chips = document.querySelectorAll('.chip');
-  const resultArea = document.getElementById('camera-result');
-  
-  const rIcon = document.getElementById('cam-res-icon');
-  const rQuery = document.getElementById('cam-res-query');
-  const rNum = document.getElementById('cam-res-number');
-  const rGlow = document.getElementById('cam-res-glow');
-  const rCtx = document.getElementById('cam-res-context');
-  const rBars = document.getElementById('cam-res-bars');
-  const rAlts = document.getElementById('cam-res-alts');
+// State object for camera UI elements
+const CameraUI = {
+  input: null, btn: null, resultArea: null, 
+  rIcon: null, rQuery: null, rNum: null, rGlow: null, rCtx: null, rBars: null, rAlts: null,
+  initialized: false
+};
 
-  // Simulated Database
-  const shadowDB = {
-    'beef burger': {
-      icon: '🍔',
-      val: 6.61,
-      color: '#F43F5E', // Rose (high)
-      context: "That's equivalent to driving <strong>26 km</strong> in an average car.",
-      bars: [
-        { label: 'Land Use', pct: 85 },
-        { label: 'Methane Emissions', pct: 90 },
-        { label: 'Processing', pct: 20 }
-      ],
-      alts: [
-        { name: 'Beyond/Plant Burger', save: '−89%', val: '0.7 kg' },
-        { name: 'Chicken Burger', save: '−75%', val: '1.6 kg' }
-      ]
-    },
-    'new iphone': {
-      icon: '📱',
-      val: 68.0,
-      color: '#F43F5E',
-      context: "That's equivalent to leaving a lightbulb on for <strong>4.5 years</strong>.",
-      bars: [
-        { label: 'Production / Mining', pct: 80 },
-        { label: 'Transport', pct: 15 },
-        { label: 'Usage', pct: 5 }
-      ],
-      alts: [
-        { name: 'Refurbished iPhone', save: '−85%', val: '10.2 kg' },
-        { name: 'Keep current phone 1 yr', save: '−100%', val: '0 kg' }
-      ]
-    },
-    'flight to paris': {
-      icon: '✈️',
-      val: 320.0,
-      color: '#F43F5E',
-      context: "That consumes <strong>15%</strong> of your sustainable yearly carbon budget.",
-      bars: [
-        { label: 'Jet Fuel', pct: 95 },
-        { label: 'Airport Ops', pct: 5 }
-      ],
-      alts: [
-        { name: 'High-speed Train (from London)', save: '−91%', val: '29 kg' },
-        { name: 'Video Conference', save: '−99%', val: '0.5 kg' }
-      ]
-    },
-    'pair of jeans': {
-      icon: '👖',
-      val: 33.4,
-      color: '#F59E0B', // Amber (medium)
-      context: "Takes <strong>7,500 liters</strong> of water to grow the cotton.",
-      bars: [
-        { label: 'Raw Material (Cotton)', pct: 60 },
-        { label: 'Dyeing / Wash', pct: 30 },
-        { label: 'Transport', pct: 10 }
-      ],
-      alts: [
-        { name: 'Thrifted Jeans', save: '−95%', val: '1.6 kg' },
-        { name: 'Recycled Denim', save: '−40%', val: '20 kg' }
-      ]
-    },
-    '1hr netflix': {
-      icon: '📺',
-      val: 0.05,
-      color: '#10B981', // Emerald (low)
-      context: "Very low impact. Servers are largely renewable.",
-      bars: [
-        { label: 'Data Center', pct: 40 },
-        { label: 'Network', pct: 40 },
-        { label: 'Device Power', pct: 20 }
-      ],
-      alts: [
-        { name: 'Read a book', save: '−100%', val: '0 kg' }
-      ]
-    },
-    'avocado from peru': {
-      icon: '🥑',
-      val: 0.85,
-      color: '#F59E0B',
-      context: "Low carbon, but very high <strong>water footprint</strong>.",
-      bars: [
-        { label: 'Transport', pct: 70 },
-        { label: 'Farming', pct: 30 }
-      ],
-      alts: [
-        { name: 'Local Seasonal Veg', save: '−80%', val: '0.15 kg' }
-      ]
-    }
-  };
-
-  function doScan(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) return;
-
-    // Simulate search delay
-    btn.innerHTML = `<span class="spinner"></span>`;
-    input.disabled = true;
-    resultArea.classList.remove('active');
-
-    setTimeout(() => {
-      btn.innerHTML = `<span class="camera__scan-btn-text">Scan</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
-      input.disabled = false;
-      
-      // Look up or mock
-      let data = shadowDB[q];
-      if (!data) {
-        // Fallback for random stuff
-        data = {
-          icon: '✦',
-          val: (Math.random() * 50).toFixed(1),
-          color: '#0D9488',
-          context: "Estimated based on similar product categories.",
-          bars: [{label: 'Production', pct: 60}, {label: 'Transport', pct: 40}],
-          alts: [{name: 'Reduce usage', save: '−50%', val: 'Half'}]
-        };
-      }
-
-      // Populate UI
-      rIcon.textContent = data.icon;
-      rQuery.textContent = query.charAt(0).toUpperCase() + query.slice(1);
-      rCtx.innerHTML = data.context;
-      rGlow.style.background = `radial-gradient(circle, ${data.color}40 0%, transparent 70%)`;
-      document.querySelector('.camera__result-unit').style.color = data.color;
-
-      // Build Bars
-      rBars.innerHTML = data.bars.map(b => `
-        <div class="res-bar">
-          <div class="res-bar__header"><span>${b.label}</span><span>${b.pct}%</span></div>
-          <div class="res-bar__track"><div class="res-bar__fill" style="width: 0; background: ${data.color}"></div></div>
-        </div>
-      `).join('');
-
-      // Build Alts
-      rAlts.innerHTML = data.alts.map(a => `
-        <div class="res-alt">
-          <div class="res-alt__info">
-            <span>✦</span> <span>${a.name}</span>
-          </div>
-          <div class="res-alt__right">
-            <span class="res-alt__save">${a.save}</span>
-            <span class="res-alt__val">${a.val}</span>
-          </div>
-        </div>
-      `).join('');
-
-      // Show
-      resultArea.classList.add('active');
-
-      // Animate Number & Bars
-      animateNumber(rNum, 0, data.val, 1500);
-      setTimeout(() => {
-        const fills = document.querySelectorAll('.res-bar__fill');
-        fills.forEach((f, i) => {
-          f.style.width = data.bars[i].pct + '%';
-        });
-      }, 100);
-
-    }, 800);
+const SHADOW_DB = {
+  'beef burger': {
+    icon: '🍔', val: 6.61, color: '#F43F5E',
+    context: "That's equivalent to driving <strong>26 km</strong> in an average car.",
+    bars: [{ label: 'Land Use', pct: 85 }, { label: 'Methane Emissions', pct: 90 }, { label: 'Processing', pct: 20 }],
+    alts: [{ name: 'Beyond/Plant Burger', save: '−89%', val: '0.7 kg' }, { name: 'Chicken Burger', save: '−75%', val: '1.6 kg' }]
+  },
+  'new iphone': {
+    icon: '📱', val: 68.0, color: '#F43F5E',
+    context: "That's equivalent to leaving a lightbulb on for <strong>4.5 years</strong>.",
+    bars: [{ label: 'Production / Mining', pct: 80 }, { label: 'Transport', pct: 15 }, { label: 'Usage', pct: 5 }],
+    alts: [{ name: 'Refurbished iPhone', save: '−85%', val: '10.2 kg' }, { name: 'Keep current phone 1 yr', save: '−100%', val: '0 kg' }]
+  },
+  'flight to paris': {
+    icon: '✈️', val: 320.0, color: '#F43F5E',
+    context: "That consumes <strong>15%</strong> of your sustainable yearly carbon budget.",
+    bars: [{ label: 'Jet Fuel', pct: 95 }, { label: 'Airport Ops', pct: 5 }],
+    alts: [{ name: 'High-speed Train (from London)', save: '−91%', val: '29 kg' }, { name: 'Video Conference', save: '−99%', val: '0.5 kg' }]
+  },
+  'pair of jeans': {
+    icon: '👖', val: 33.4, color: '#F59E0B',
+    context: "Takes <strong>7,500 liters</strong> of water to grow the cotton.",
+    bars: [{ label: 'Raw Material (Cotton)', pct: 60 }, { label: 'Dyeing / Wash', pct: 30 }, { label: 'Transport', pct: 10 }],
+    alts: [{ name: 'Thrifted Jeans', save: '−95%', val: '1.6 kg' }, { name: 'Recycled Denim', save: '−40%', val: '20 kg' }]
+  },
+  '1hr netflix': {
+    icon: '📺', val: 0.05, color: '#10B981',
+    context: "Very low impact. Servers are largely renewable.",
+    bars: [{ label: 'Data Center', pct: 40 }, { label: 'Network', pct: 40 }, { label: 'Device Power', pct: 20 }],
+    alts: [{ name: 'Read a book', save: '−100%', val: '0 kg' }]
+  },
+  'avocado from peru': {
+    icon: '🥑', val: 0.85, color: '#F59E0B',
+    context: "Low carbon, but very high <strong>water footprint</strong>.",
+    bars: [{ label: 'Transport', pct: 70 }, { label: 'Farming', pct: 30 }],
+    alts: [{ name: 'Local Seasonal Veg', save: '−80%', val: '0.15 kg' }]
   }
+};
 
-  // Event Listeners
-  btn.addEventListener('click', () => doScan(input.value));
-  input.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') doScan(input.value);
+function initCameraUI() {
+  if (CameraUI.initialized) return;
+  CameraUI.input = document.getElementById('camera-input');
+  CameraUI.btn = document.getElementById('camera-scan-btn');
+  CameraUI.resultArea = document.getElementById('camera-result');
+  CameraUI.rIcon = document.getElementById('cam-res-icon');
+  CameraUI.rQuery = document.getElementById('cam-res-query');
+  CameraUI.rNum = document.getElementById('cam-res-number');
+  CameraUI.rGlow = document.getElementById('cam-res-glow');
+  CameraUI.rCtx = document.getElementById('cam-res-context');
+  CameraUI.rBars = document.getElementById('cam-res-bars');
+  CameraUI.rAlts = document.getElementById('cam-res-alts');
+  CameraUI.initialized = true;
+}
+
+function initCameraDemo() {
+  initCameraUI();
+  if (!CameraUI.btn) return;
+  
+  CameraUI.btn.addEventListener('click', () => performScan(CameraUI.input.value));
+  CameraUI.input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') performScan(CameraUI.input.value);
   });
-  chips.forEach(chip => {
+  
+  document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const q = chip.getAttribute('data-q');
-      input.value = q;
-      doScan(q);
+      CameraUI.input.value = q;
+      performScan(q);
     });
+  });
+}
+
+function performScan(query) {
+  const q = query.toLowerCase().trim();
+  if (!q) return;
+
+  setScanLoadingState();
+
+  setTimeout(() => {
+    const data = fetchScanData(q);
+    if (!data) return; // invalid shape
+    
+    renderScanUI(query, data);
+  }, 800);
+}
+
+function setScanLoadingState() {
+  CameraUI.btn.innerHTML = `<span class="spinner"></span>`;
+  CameraUI.input.disabled = true;
+  CameraUI.resultArea.classList.remove('active');
+}
+
+function fetchScanData(query) {
+  let data = SHADOW_DB[query];
+  if (!data) {
+    data = {
+      icon: '✦', val: (Math.random() * 50).toFixed(1), color: '#0D9488',
+      context: "Estimated based on similar product categories.",
+      bars: [{label: 'Production', pct: 60}, {label: 'Transport', pct: 40}],
+      alts: [{name: 'Reduce usage', save: '−50%', val: 'Half'}]
+    };
+  }
+
+  if (window.SecurityUtils && !window.SecurityUtils.validateCarbonData(data)) {
+    console.error("Data shape is invalid.");
+    return null; 
+  }
+  return data;
+}
+
+function renderScanUI(query, data) {
+  CameraUI.btn.innerHTML = `<span class="camera__scan-btn-text">Scan</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>`;
+  CameraUI.input.disabled = false;
+  
+  populateScanDetails(query, data);
+  renderScanBars(data);
+  renderScanAlts(data);
+
+  CameraUI.resultArea.classList.add('active');
+  animateNumber(CameraUI.rNum, 0, data.val, 1500);
+  
+  setTimeout(() => {
+    document.querySelectorAll('.res-bar__fill').forEach((f, i) => {
+      f.style.width = data.bars[i].pct + '%';
+    });
+  }, 100);
+}
+
+function populateScanDetails(query, data) {
+  const S = window.SecurityUtils;
+  CameraUI.rIcon.textContent = data.icon;
+  CameraUI.rQuery.textContent = query.charAt(0).toUpperCase() + query.slice(1);
+  CameraUI.rCtx.innerHTML = data.context; 
+  CameraUI.rGlow.style.background = `radial-gradient(circle, ${S.sanitizeInput(data.color)}40 0%, transparent 70%)`;
+  document.querySelector('.camera__result-unit').style.color = S.sanitizeInput(data.color);
+}
+
+function renderScanBars(data) {
+  const S = window.SecurityUtils;
+  CameraUI.rBars.innerHTML = '';
+  data.bars.forEach(b => {
+    const bar = document.createElement('div');
+    bar.className = 'res-bar';
+    bar.innerHTML = `
+      <div class="res-bar__header"><span>${S.sanitizeInput(b.label)}</span><span>${Number(b.pct)}%</span></div>
+      <div class="res-bar__track"><div class="res-bar__fill" style="width: 0; background: ${S.sanitizeInput(data.color)}"></div></div>
+    `;
+    CameraUI.rBars.appendChild(bar);
+  });
+}
+
+function renderScanAlts(data) {
+  const S = window.SecurityUtils;
+  CameraUI.rAlts.innerHTML = '';
+  data.alts.forEach(a => {
+    const alt = document.createElement('div');
+    alt.className = 'res-alt';
+    alt.innerHTML = `
+      <div class="res-alt__info">
+        <span>✦</span> <span>${S.sanitizeInput(a.name)}</span>
+      </div>
+      <div class="res-alt__right">
+        <span class="res-alt__save">${S.sanitizeInput(a.save)}</span>
+        <span class="res-alt__val">${S.sanitizeInput(a.val)}</span>
+      </div>
+    `;
+    CameraUI.rAlts.appendChild(alt);
   });
 }
 
@@ -439,4 +428,11 @@ function animateNumberWithSuffix(element, start, end, duration, suffix) {
     }
   };
   window.requestAnimationFrame(step);
+}
+
+// PWA Service Worker Registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/service-worker.js')
+    .then(() => console.log('Service Worker Registered'))
+    .catch(err => console.error('Service Worker Registration Failed', err));
 }

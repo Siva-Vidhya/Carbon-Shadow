@@ -16,9 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function applySettingsToDashboard() {
-  const settingsStr = localStorage.getItem('carbon_settings');
-  if (!settingsStr) return;
-  const settings = JSON.parse(settingsStr);
+  const settings = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_settings') : null;
+  if (!settings) return;
 
   // Avatar update
   const avatar = document.querySelector('.os-user__img');
@@ -28,7 +27,7 @@ function applySettingsToDashboard() {
   }
 
   // Filter Echo recommendations and apply persisted shifts
-  const completedShifts = JSON.parse(localStorage.getItem('carbon_completed_shifts') || '[]');
+  const completedShifts = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_completed_shifts', []) : JSON.parse(localStorage.getItem('carbon_completed_shifts') || '[]');
   const aiCards = document.querySelectorAll('.ai-card');
   aiCards.forEach(card => {
     const textEl = card.querySelector('.ai-card__text');
@@ -131,11 +130,16 @@ function initHUDGauge() {
   if (!fillPath || !scoreText) return;
 
   // Target values
-  const settingsStr = localStorage.getItem('carbon_settings');
-  const settings = settingsStr ? JSON.parse(settingsStr) : {
-    diet: 'average', commute: 'car', flights: '1-2'
-  };
+  const settings = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_settings') : null;
+  if (!settings) {
+    const defaultSettings = { diet: 'average', commute: 'car', flights: '1-2' };
+    applyGaugeScore(defaultSettings, fillPath, glowPath, scoreText);
+  } else {
+    applyGaugeScore(settings, fillPath, glowPath, scoreText);
+  }
+}
 
+function applyGaugeScore(settings, fillPath, glowPath, scoreText) {
   let targetScore = 0;
   const savedScore = localStorage.getItem('carbon_score');
   if (savedScore !== null) {
@@ -338,7 +342,7 @@ function animateValue(obj, start, end, duration, decimals) {
 /* =========================================
    4. APPLY SHIFT ANIMATION
    ========================================= */
-function applyShift(btn) {
+window.applyShift = function applyShift(btn) {
   // Disable button to prevent spam
   if (btn.disabled) return;
   btn.disabled = true;
@@ -354,9 +358,11 @@ function applyShift(btn) {
       textEl.style.opacity = '0.6';
       
       // Persist state
-      let completedShifts = JSON.parse(localStorage.getItem('carbon_completed_shifts') || '[]');
-      completedShifts.push(textEl.textContent);
-      localStorage.setItem('carbon_completed_shifts', JSON.stringify(completedShifts));
+      const shiftText = textEl.textContent;
+      let completedShifts = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_completed_shifts', []) : JSON.parse(localStorage.getItem('carbon_completed_shifts') || '[]');
+      if (!completedShifts.includes(shiftText)) completedShifts.push(shiftText);
+      if (window.SecurityUtils) window.SecurityUtils.safeLocalStorageSet('carbon_completed_shifts', completedShifts);
+      else localStorage.setItem('carbon_completed_shifts', JSON.stringify(completedShifts));
     }
     const iconEl = card.querySelector('.ai-card__icon') || card.querySelector('.echo-suggestion__icon');
     if (iconEl) {

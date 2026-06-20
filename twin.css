@@ -268,3 +268,29 @@
   .t-card-wrapper:hover .t-card { width: 100%; background: rgba(20,20,20,0.8); }
   .scroll-indicator { display: none; }
 }
+
+/* =========================================
+   CARBON CONTEXT TOOLTIPS
+   ========================================= */
+.context-tooltip {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--accent-emerald);
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: fade-in-tooltip 0.5s ease-out forwards;
+}
+
+.context-tooltip strong {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-style: normal;
+}
+
+@keyframes fade-in-tooltip {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -67,7 +67,7 @@ function initEcho() {
     const msgDiv = document.createElement('div');
     msgDiv.className = `echo-msg echo-msg--${sender}`;
     
-    let html = `<div class="echo-bubble">${text}</div>`;
+    let html = `<div class="echo-bubble">${window.SecurityUtils ? window.SecurityUtils.sanitizeInput(text) : text}</div>`;
     
     if (suggestions && suggestions.length > 0) {
       suggestions.forEach(sug => {
@@ -92,8 +92,8 @@ function initEcho() {
     const applyBtns = msgDiv.querySelectorAll('.echo-apply-btn');
     applyBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        if (typeof applyShift === 'function') {
-          applyShift(btn);
+        if (typeof window.applyShift === 'function') {
+          window.applyShift(btn);
           setTimeout(() => panel.classList.remove('active'), 1000);
         } else {
           btn.textContent = 'Applied ✓';
@@ -152,8 +152,7 @@ function initEcho() {
   // Mock Negotiation Engine
   function generateResponse(text) {
     const lower = text.toLowerCase();
-    const settingsStr = localStorage.getItem('carbon_settings');
-    const settings = settingsStr ? JSON.parse(settingsStr) : {};
+    const settings = window.SecurityUtils ? window.SecurityUtils.safeLocalStorageGet('carbon_settings', {}) : {};
     
     // Meat scenario
     if ((lower.includes('meat') || lower.includes('beef') || lower.includes('steak')) && settings.diet !== 'vegan' && settings.diet !== 'vegetarian') {

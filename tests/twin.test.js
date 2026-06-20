@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 const code = fs.readFileSync(path.resolve(__dirname, '../twin.js'), 'utf-8');
+const securityCode = fs.readFileSync(path.resolve(__dirname, '../security-utils.js'), 'utf-8');
 
 describe('Digital Twin Logic', () => {
   beforeAll(() => {
@@ -16,7 +17,7 @@ describe('Digital Twin Logic', () => {
       <div id="ambient-bg"></div>
     `;
     const script = document.createElement('script');
-    script.textContent = code;
+    script.textContent = securityCode + '\n' + code;
     document.head.appendChild(script);
   });
 

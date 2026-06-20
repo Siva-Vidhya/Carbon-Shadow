@@ -1,178 +1,113 @@
 # 🌍 Carbon Shadow
 
-> **An AI-powered climate companion that helps people understand, track, and reduce their carbon footprint before it happens.**
+> **See the impact of your choices before you make them.**
 
-## Challenge
-
-**PromptWars – Challenge 3: Carbon Footprint Awareness Platform**
-
-The challenge requires participants to design a solution that helps individuals understand, track, and reduce their carbon footprint through simple actions and personalized insights.
+Carbon Shadow is an interactive, client-side web platform designed for **PromptWars Challenge 3: Carbon Footprint Awareness Platform**. It breaks down the abstract concept of carbon emissions into tangible, highly visual, and gamified metrics, empowering users to make sustainable lifestyle shifts.
 
 ---
 
-## Problem Statement
+## 🎯 Challenge Alignment
 
-Many people want to live more sustainably but struggle to understand the environmental impact of their everyday choices. Existing carbon footprint tools often focus only on past actions, present overwhelming statistics, and fail to motivate long-term behavior change.
-
----
-
-## Our Solution
-
-**Carbon Shadow** transforms invisible environmental consequences into visible, actionable futures.
-
-Instead of simply calculating emissions, Carbon Shadow allows users to:
-
-* Understand their current carbon footprint.
-* Visualize future outcomes through a Digital Twin.
-* Receive personalized recommendations from an AI companion.
-* Commit to sustainable shifts and track their progress.
-
-Our goal is to turn climate awareness into meaningful action.
+| Requirement | Feature | Implementation |
+| :--- | :--- | :--- |
+| Visualize future scenarios | **Digital Twin** | Projects Current, Light, and Optimal paths based on user settings (`twin.js`) |
+| Context-aware recommendations | **Echo AI Assistant** | Filters actionable shifts based on diet/commute/flights (`echo.js`) |
+| Real-time behavior impact | **Shift Engine** | Instantly deducts carbon scores when shifts are applied (`dashboard.js`) |
+| Carbon impact of purchases | **Receipt Lens** | AR camera prototype estimating emissions of grocery items (`camera.js`) |
+| Track eco-actions & progress | **Carbon Wallet** | Persistent tracking of applied shifts and reward points (`app.js`) |
 
 ---
 
-## How Carbon Shadow Addresses the Challenge
+## 🚀 Features
 
-### Understand Carbon Footprint
-
-* Digital Twin visualizes the impact of current lifestyle habits.
-* Receipt Lens reveals hidden emissions from everyday consumption.
-
-### Track Carbon Footprint
-
-* Dashboard displays carbon score and carbon wallet.
-* Progress persists across sessions using local storage.
-
-### Reduce Carbon Footprint
-
-* Echo AI recommends personalized actions.
-* Shift Engine encourages real-world behavior change through commitment loops.
+*   👯 **Digital Twin**: Visualizes three distinct future scenarios (Current Path, Light Path, Optimal Path) directly influenced by your configured lifestyle settings.
+*   🤖 **Echo AI Assistant**: Context-aware sustainability recommendations that intelligently adapt to your profile (e.g., hiding beef reduction tips if you are vegan).
+*   ⚡ **Shift Engine**: A commitment loop that shows the real-time impact of behavior changes on your live carbon score gauge.
+*   📸 **Receipt Lens**: An AR-inspired camera feature that scans products/receipts to break down their precise carbon footprint and suggest eco-friendly alternatives.
+*   💳 **Carbon Wallet**: A gamified tracking system that logs your completed eco-actions and rewards you with persistent points across sessions.
 
 ---
 
-## Key Features
+## 🛠 Tech Stack
 
-### 🌱 Carbon Shadow Avatar
+Carbon Shadow was built to be blazingly fast, highly secure, and exceptionally lightweight:
 
-A living climate companion that evolves as users adopt sustainable habits.
-
-### 🔮 Digital Twin
-
-Explore multiple future scenarios:
-
-* Current Path
-* Light Path
-* Optimal Path
-
-### 🤖 Echo AI Assistant
-
-Provides context-aware recommendations tailored to the user's lifestyle.
-
-### ⚡ Shift Engine
-
-Allows users to commit to eco-friendly changes and immediately see their impact.
-
-### 🧾 Receipt Lens
-
-Analyzes grocery receipts using mock environmental datasets to estimate carbon impact.
-
-### 💰 Carbon Wallet
-
-Tracks positive environmental actions and visualizes progress.
-
-### ⚙️ Settings & Personalization
-
-Users can adjust preferences and immediately update future projections.
+*   **Core**: HTML5, CSS3, Vanilla JavaScript (ES2022)
+*   **Architecture**: Client-side `localStorage` state management
+*   **Testing**: Vitest + JSDOM for robust unit testing
+*   **Security**: Strict Content Security Policies (CSP), DOM sanitization, and graceful JSON degradation.
 
 ---
 
-## How It Works
+## 💻 How to Run Locally
 
-User Habits
-↓
-Carbon Shadow Analysis
-↓
-Digital Twin Simulation
-↓
-Echo Recommendations
-↓
-Apply Shift
-↓
-Reduced Carbon Footprint
+Carbon Shadow requires absolutely no build steps or backend servers!
 
----
-
-## Technology Stack
-
-* HTML
-* CSS
-* JavaScript
-* LocalStorage
-* Vercel
-* GitHub
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/carbon-shadow.git
+   ```
+2. Open `index.html` in any modern web browser.
+3. Alternatively, serve it via any static local server:
+   ```bash
+   npx serve .
+   ```
 
 ---
 
-## Security Considerations
+## 🧪 How to Run Tests
 
-* No user credentials are collected.
-* No sensitive information is transmitted.
-* All demo persistence is handled locally using LocalStorage.
-* No third-party tracking scripts are used.
+Our comprehensive 30+ unit test suite ensures UI logic, state management, and edge cases are locked down.
 
----
-
-## Accessibility
-
-Carbon Shadow is designed with inclusivity in mind:
-
-* Keyboard navigation support
-* Focus indicators for interactive elements
-* ARIA labels for icon-only controls
-* Responsive layouts across devices
+1. Install testing dependencies:
+   ```bash
+   npm install
+   ```
+2. Run the Vitest suite:
+   ```bash
+   npm run test
+   # or
+   npx vitest run
+   ```
 
 ---
 
-## Testing
+## 📂 File Structure Overview
 
-The following user journeys were manually validated:
-
-* Landing Page navigation
-* Onboarding flow
-* Dashboard interactions
-* Echo AI conversations
-* Shift persistence after refresh
-* Digital Twin scenarios
-* Receipt Lens functionality
-* Settings updates
-* Mobile responsiveness
-* Accessibility navigation
-* Demo flow execution
-
----
-
-## Assumptions
-
-* Environmental values are derived from publicly available averages and demonstration datasets.
-* The MVP focuses on awareness and behavior change rather than exact life-cycle accounting.
-* Future integrations may support health, mobility, and financial ecosystems.
+```text
+├── index.html          # Landing page
+├── dashboard.html      # Main Carbon Wallet & Shift Engine UI
+├── twin.html           # Digital Twin projection UI
+├── camera.html         # Receipt Lens AR prototype UI
+├── settings.html       # Lifestyle configuration UI
+├── app.js              # Core application entry & camera logic
+├── dashboard.js        # Shift Engine logic & gauge rendering
+├── twin.js             # Scenario projection math & rendering
+├── echo.js             # AI Assistant recommendation filtering
+├── settings.js         # User preference management
+├── security-utils.js   # XSS sanitization and safe localStorage wrappers
+├── constants.js        # Centralized emission values & config
+├── .eslintrc.json      # Strict linting rules (max-lines, etc.)
+└── tests/              # Vitest JSDOM test suites
+```
 
 ---
 
-## Deployment
+## 🛣 Future Roadmap
 
-### GitHub Repository
-
-https://github.com/Siva-Vidhya/Carbon-Shadow
-
-### Live Demo
-
-https://carbon-shadow-rho.vercel.app
+*   **PWA Integration**: Add Service Workers to make Carbon Shadow installable and functional offline.
+*   **Live OpenData APIs**: Replace our `SHADOW_DB` with live calls to global emission databases like OpenFDA or global carbon registries.
+*   **Social Leaderboards**: Introduce anonymous peer comparison to drive community-wide sustainability goals.
 
 ---
 
-## Vision
+## 🤝 Contributing
 
-Most carbon tools tell users what they have already done.
+Contributions are welcome! Please ensure you adhere to the project's strict 30-line `max-lines-per-function` ESLint rule before submitting a PR.
 
-**Carbon Shadow empowers people to see—and change—the future they are creating.**
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Run the Linter (`npx eslint *.js`)
+4. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+5. Push to the Branch (`git push origin feature/AmazingFeature`)
+6. Open a Pull Request

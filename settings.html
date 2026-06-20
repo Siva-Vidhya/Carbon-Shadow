@@ -8,6 +8,11 @@
   <link rel="stylesheet" href="dashboard.css" />
   <link rel="stylesheet" href="settings.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://ui-avatars.com; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Permissions-Policy" content="camera=()">
+  <script src="security-utils.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
 </head>
 <body class="os-body">
 
@@ -37,7 +42,7 @@
       </div>
 
       <div class="os-nav__bottom">
-        <a href="settings.html" class="os-nav__item active" title="Settings" aria-label="Settings">
+        <a href="settings.html" class="os-nav__item active" title="Settings" aria-label="Settings" aria-current="page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
         </a>
         <div class="os-user">
@@ -53,7 +58,7 @@
           <h1 class="os-header__title">Settings</h1>
           <p class="os-header__subtitle">Configure your Carbon Shadow profile and preferences.</p>
         </div>
-        <div class="os-header__status" id="save-status">
+        <div class="os-header__status" id="save-status" role="alert" aria-live="polite">
           <span class="status-dot"></span> Saved Locally
         </div>
       </header>
@@ -81,11 +86,11 @@
         <!-- 2. Lifestyle Preferences -->
         <section class="settings-section glass-card">
           <h2 class="settings-section__title">2. Lifestyle Preferences</h2>
-          <p class="settings-hint">These values dynamically calculate your Baseline Carbon Shadow.</p>
+          <p class="settings-hint" id="life-hint">These values dynamically calculate your Baseline Carbon Shadow.</p>
           
           <div class="form-group">
             <label for="life-diet">Dietary Preference</label>
-            <select id="life-diet" class="settings-input">
+            <select id="life-diet" class="settings-input" aria-describedby="life-hint">
               <option value="meat">Meat-Heavy (High Impact)</option>
               <option value="average">Average/Omnivore (Medium Impact)</option>
               <option value="vegetarian">Vegetarian (Low Impact)</option>
@@ -95,7 +100,7 @@
 
           <div class="form-group">
             <label for="life-commute">Primary Commute</label>
-            <select id="life-commute" class="settings-input">
+            <select id="life-commute" class="settings-input" aria-describedby="life-hint">
               <option value="car">Personal Car</option>
               <option value="ev">Electric Vehicle</option>
               <option value="transit">Public Transit</option>
@@ -105,7 +110,7 @@
 
           <div class="form-group">
             <label for="life-flights">Flights per Year</label>
-            <select id="life-flights" class="settings-input">
+            <select id="life-flights" class="settings-input" aria-describedby="life-hint">
               <option value="0">0 (Zero)</option>
               <option value="1-2">1-2 (Moderate)</option>
               <option value="3+">3+ (Frequent Flyer)</option>
@@ -116,20 +121,20 @@
         <!-- 3. Echo Preferences -->
         <section class="settings-section glass-card">
           <h2 class="settings-section__title">3. Echo Preferences</h2>
-          <p class="settings-hint">Configure how the AI assistant suggests footprint shifts.</p>
+          <p class="settings-hint" id="echo-hint">Configure how the AI assistant suggests footprint shifts.</p>
           <div class="form-group toggle-group">
             <div>
               <label>Echo Assistant Enabled</label>
-              <span class="settings-sublabel">Allow Echo to provide active feedback.</span>
+              <span class="settings-sublabel" id="echo-enabled-hint">Allow Echo to provide active feedback.</span>
             </div>
             <label class="switch">
-              <input type="checkbox" id="echo-enabled" checked>
+              <input type="checkbox" id="echo-enabled" checked aria-describedby="echo-enabled-hint">
               <span class="slider round"></span>
             </label>
           </div>
           <div class="form-group">
             <label for="echo-strictness">Recommendation Strictness</label>
-            <select id="echo-strictness" class="settings-input">
+            <select id="echo-strictness" class="settings-input" aria-describedby="echo-hint">
               <option value="gentle">Gentle (Small shifts only)</option>
               <option value="balanced">Balanced (Recommended)</option>
               <option value="strict">Strict (Aggressive carbon reduction)</option>
@@ -140,25 +145,25 @@
         <!-- 4. Data Sources -->
         <section class="settings-section glass-card">
           <h2 class="settings-section__title">4. Data Sources</h2>
-          <p class="settings-hint">Select the emission factor frameworks (Simulated).</p>
+          <p class="settings-hint" id="data-hint">Select the emission factor frameworks (Simulated).</p>
           <div class="form-group toggle-group">
             <label>EPA Emission Factors</label>
             <label class="switch">
-              <input type="checkbox" checked disabled>
+              <input type="checkbox" checked disabled aria-describedby="data-hint">
               <span class="slider round"></span>
             </label>
           </div>
           <div class="form-group toggle-group">
             <label>IPCC Lifecycle Averages</label>
             <label class="switch">
-              <input type="checkbox" checked disabled>
+              <input type="checkbox" checked disabled aria-describedby="data-hint">
               <span class="slider round"></span>
             </label>
           </div>
           <div class="form-group toggle-group">
             <label>Open-Source Product Datasets</label>
             <label class="switch">
-              <input type="checkbox" checked disabled>
+              <input type="checkbox" checked disabled aria-describedby="data-hint">
               <span class="slider round"></span>
             </label>
           </div>
@@ -181,6 +186,9 @@
               <p>Estimates are calculated using EPA emission factors, IPCC lifecycle averages, and open-source environmental datasets. Base scores are modified live by your lifestyle preferences to simulate the dynamic nature of a real Carbon OS.</p>
             </div>
           </div>
+          <button id="download-report" class="btn btn--glass" style="margin-top: 24px; width: 100%;" aria-label="Download your carbon impact report as CSV">
+            📥 Download Carbon Report
+          </button>
         </section>
 
       </div>
@@ -188,5 +196,6 @@
   </div>
 
   <script src="settings.js"></script>
+  <script src="export-report.js"></script>
 </body>
 </html>

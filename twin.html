@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="twin.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◇</text></svg>" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://ui-avatars.com; object-src 'none'; base-uri 'self';">
+  <meta http-equiv="Permissions-Policy" content="camera=()">
+  <script src="security-utils.js"></script>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a2e">
 </head>
 <body class="twin-body">
 
@@ -54,7 +59,7 @@
             <div class="t-metrics">
               <div class="t-metric">
                 <span class="t-metric__label">Carbon<i class="methodology-icon">i</i></span>
-                <span class="t-metric__val" id="base-carbon">4.2t / yr</span>
+                <span class="t-metric__val" id="base-carbon" role="alert" aria-live="polite">4.2t / yr</span>
               </div>
               <div class="t-metric">
                 <span class="t-metric__label">Water<i class="methodology-icon">i</i></span>
@@ -64,6 +69,7 @@
                 <span class="t-metric__label">Health</span>
                 <span class="t-metric__val text-neutral">Average</span>
               </div>
+              <div id="ctx-base" style="margin-top: 16px;"></div>
             </div>
           </div>
         </div>
@@ -106,6 +112,7 @@
                   <span class="t-metric__val text-rose">Elevated Risk</span>
                 </div>
               </div>
+              <div id="ctx-a" style="margin-top: 16px;"></div>
               <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(244,63,94,0.3);">Choose This Path</button>
             </div>
           </div>
@@ -138,6 +145,7 @@
                   <span class="t-metric__val text-teal">Improved</span>
                 </div>
               </div>
+              <div id="ctx-b" style="margin-top: 16px;"></div>
               <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(13,148,136,0.3);">Choose This Path</button>
             </div>
           </div>
@@ -171,6 +179,7 @@
                   <span class="t-metric__val text-violet">Optimal Vitality</span>
                 </div>
               </div>
+              <div id="ctx-c" style="margin-top: 16px;"></div>
               <button class="btn btn--glass t-card__cta" style="margin-top: 24px; width: 100%; border-color: rgba(16,185,129,0.3);">Choose This Path</button>
             </div>
           </div>
@@ -181,5 +190,6 @@
   </main>
 
   <script src="twin.js"></script>
+  <script src="carbon-context.js"></script>
 </body>
 </html>
